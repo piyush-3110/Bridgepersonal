@@ -7,18 +7,37 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { IconButton, colors } from '@mui/material';
+import { IconButton } from '@mui/material';
 
 export const FirstSection = () => {
   const [coin, setCoin] = React.useState('Polygon');
   const [coin1, setCoin1] = React.useState('Arbitrum');
   const [chainId, setChainId] = React.useState<number | undefined>();
+  const [prev,setPrev] = React.useState('');
+  const [prev1,setPrev1] = React.useState('');
+
   const coins = [
     { value: "Polygon", label: "Polygon", chainid: 12322 },
     { value: "Arbitrum", label: "Arbitrum", chainid: 11222 },
     { value: "Base", label: "Base", chainid: 122322 }
   ];
-
+  React.useEffect(()=>{
+    if(coin!== 'Polygon'&& coin1!== 'Polygon'){
+        setCoin1('Polygon');
+    }
+    else if(coin=== 'Polygon'&& coin1==='Polygon'){
+     setCoin1(prev);
+    }
+},[coin])
+  
+React.useEffect(()=>{
+  if(coin1!== 'Polygon'&& coin!== 'Polygon'){
+      setCoin('Polygon');
+  }
+  else if(coin1=== 'Polygon'&& coin==='Polygon'){
+   setCoin(prev);
+  }
+},[coin1])
   const handleChange = (event: SelectChangeEvent) => {
     const newValue = event.target.value as string;
     if (newValue !== coin1) {
@@ -33,8 +52,14 @@ export const FirstSection = () => {
     }
   };
 
-  const handleChain = (chainId: number) => {
+  const handleChain = (chainId: number,label:string) => {
     setChainId(chainId);
+    setPrev(label);
+    console.log(chainId);
+  };
+  const handleChain1 = (chainId: number, label:string) => {
+    setChainId(chainId);
+    setPrev1(label);
     console.log(chainId);
   };
 
@@ -43,6 +68,8 @@ export const FirstSection = () => {
     setCoin(coin1);
     setCoin1(temp);
   };
+
+
 
   return (
     <Box
@@ -55,10 +82,9 @@ export const FirstSection = () => {
     >
       <Box sx={{ minWidth: { xs: '41%', sm: '43%' } }}>
         <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label" sx={{color:'gray'}}>{coin}</InputLabel>
+          <InputLabel id="demo-simple-select-label" sx={{ color: 'gray' }}>{coin}</InputLabel>
           <Select
             sx={{ backgroundColor: ["#211e33"], color: 'white' }}
-      
             value={coin}
             label="Polygon"
             onChange={handleChange}
@@ -66,14 +92,13 @@ export const FirstSection = () => {
               PaperProps: {
                 sx: {
                   backgroundColor: '#0b081f',
-                  border:'1px solid gray',
-              
+                  border: '1px solid gray',
                 },
               },
             }}
           >
             {coins.map((coinItem) => (
-              <MenuItem key={coinItem.value} value={coinItem.value} onClick={() => handleChain(coinItem.chainid)} disabled={coin1 === coinItem.value}>{coinItem.label}</MenuItem>
+              <MenuItem key={coinItem.value} value={coinItem.value} onClick={() => handleChain(coinItem.chainid, coinItem.label )} disabled={coin1 === coinItem.value}>{coinItem.label}</MenuItem>
             ))}
           </Select>
         </FormControl>
@@ -81,7 +106,7 @@ export const FirstSection = () => {
       <IconButton sx={{ color: 'blue', marginX: "3%" }} onClick={handleClick}><SwapHorizIcon /></IconButton>
       <Box sx={{ minWidth: { xs: '41%', sm: '43%' } }}>
         <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label" sx={{color:'gray'}}>{coin1}</InputLabel>
+          <InputLabel id="demo-simple-select-label" sx={{ color: 'gray' }}>{coin1}</InputLabel>
           <Select
             sx={{ backgroundColor: "#211e33", color: 'white' }}
             variant="outlined"
@@ -92,13 +117,13 @@ export const FirstSection = () => {
               PaperProps: {
                 sx: {
                   backgroundColor: '#0b081f',
-                  border:'1px solid gray'
+                  border: '1px solid gray'
                 },
               },
             }}
           >
             {coins.map((coinItem) => (
-              <MenuItem key={coinItem.value} value={coinItem.value}  onClick={() => handleChain(coinItem.chainid)} disabled={coin === coinItem.value}>{coinItem.label}</MenuItem>
+              <MenuItem key={coinItem.value} value={coinItem.value} onClick={() => handleChain1(coinItem.chainid, coinItem.label)} disabled={coin === coinItem.value}>{coinItem.label}</MenuItem>
             ))}
           </Select>
         </FormControl>
