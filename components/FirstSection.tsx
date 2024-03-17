@@ -7,12 +7,8 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { IconButton, colors } from "@mui/material";
-interface Coins {
-  value: string;
-  label: string;
-  chainId: number;
-}
+import { IconButton } from "@mui/material";
+
 export const FirstSection = () => {
   const [coin, setCoin] = React.useState<string>("Polygon");
   const [coin1, setCoin1] = React.useState<string>("Arbitrum");
@@ -20,10 +16,50 @@ export const FirstSection = () => {
   const [prev, setPrev] = React.useState("");
   const [prev1, setPrev1] = React.useState("");
 
+  interface Coins {
+    value: string;
+    label: string;
+    chainId: number;
+    logo: string;
+  }
+
   const coins: Coins[] = [
-    { value: "Polygon", label: "Polygon", chainId: 12322 },
-    { value: "Arbitrum", label: "Arbitrum", chainId: 11222 },
-    { value: "Base", label: "Base", chainId: 122322 },
+    {
+      value: "Polygon",
+      label: "Polygon",
+      chainId: 12322,
+      logo: "./images/polygon.png",
+    },
+    {
+      value: "Arbitrum",
+      label: "Arbitrum",
+      chainId: 11222,
+      logo: "./images/arbitrum.png",
+    },
+    {
+      value: "Base",
+      label: "Base",
+      chainId: 122322,
+      logo: "./images/base.png",
+    },
+    {
+      value: "Scroll",
+      label: "Scroll",
+      chainId: 122322,
+      logo: "./images/scroll.png",
+    },
+    {
+      value: "Optimism",
+      label: "Optimism",
+      chainId: 122322,
+      logo: "./images/optimism.png",
+    },
+    {
+      value: "Ethereum",
+      label: "Ethereum",
+      chainId: 122322,
+      logo: "./images/ethereum.jpg",
+    },
   ];
   React.useEffect(() => {
     if (coin !== "Polygon" && coin1 !== "Polygon") {
@@ -57,12 +93,10 @@ export const FirstSection = () => {
   const handleChain = (chainId: number, label: string) => {
     setChainId(chainId);
     setPrev(label);
-    console.log(chainId);
   };
   const handleChain1 = (chainId: number, label: string) => {
     setChainId(chainId);
     setPrev1(label);
-    console.log(chainId);
   };
 
   const handleClick = () => {

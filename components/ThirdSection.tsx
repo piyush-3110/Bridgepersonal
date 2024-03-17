@@ -17,7 +17,9 @@ export const ThirdSection = () => {
       }}
     >
       <Box>
-        <Typography variant="subtitle2">Destination Address</Typography>
+        <Typography variant="subtitle2">
+          Destination Address (Optional)
+        </Typography>
         <TextField
           variant="outlined"
           placeholder="0x346...."

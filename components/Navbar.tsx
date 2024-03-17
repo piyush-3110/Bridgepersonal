@@ -41,13 +41,96 @@ export const Navbar = () => {
     >
       <Box>
         <Typography variant="h5">Floyx</Typography>
+        <a href="#">
+          <img
+            src="./images/Logo.png"
+            alt="FLOYX"
+            style={{ maxWidth: "100%", height: "auto", width: 100 }}
+          ></img>
+        </a>
+      </Box>
+      <Box
+        sx={{
+          display: { xs: "none", sm: "none", md: "none", lg: "flex" },
+          alignItems: "center",
+        }}
+      >
+        <Typography
+          variant="subtitle2"
+          sx={{ color: isHovering ? "rgba(255, 255, 255, 0.7)" : "inherit" }}
+        >
+          Floyx Contract Address |
+        </Typography>
+        <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+          <Button
+            variant="text"
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
+          >
+            Add To Metamask
+          </Button>
+          <img
+            src="./images/metamask.png"
+            alt="Metamaskicon"
+            style={{ height: 20 }}
+          ></img>
+        </Box>
       </Box>
       <Box>
-        <Button variant="text">Floyx Contract Address</Button>
-        <Button variant="text">Add To Metamask</Button>
+        <Button
+          sx={{
+            width: "100%",
+            backgroundColor: "#937cff",
+            color: "black",
+            "&:hover": { backgroundColor: "#7a5ce1" },
+            padding: [1],
+          }}
+        >
+          Connect Wallet
+        </Button>
       </Box>
-      <Box>
-        <ConnectButton />
+      <Box
+        sx={{ display: { xs: "block", sm: "block", md: "block", lg: "none" } }}
+      >
+        <IconButton onClick={handleMenuOpen} sx={{ color: "white" }}>
+          <MenuIcon />
+        </IconButton>
+        <Popover
+          anchorEl={menuAnchor}
+          open={open}
+          onClose={handleMenuClose}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              padding: 1,
+              backgroundColor: "black",
+            }}
+          >
+            <Box sx={{ width: "auto", marginLeft: "auto" }}>
+              <IconButton onClick={handleMenuClose} sx={{ color: "white" }}>
+                <CloseIcon />
+              </IconButton>
+            </Box>
+          </Box>
+          <List sx={{ backgroundColor: "black", padding: 0 }}>
+            <ListItem
+              onClick={handleMenuClose}
+              sx={{ "&:hover": { cursor: "pointer" } }}
+            >
+              <ListItemText primary="Add To Metamask" />
+            </ListItem>
+          </List>
+        </Popover>
       </Box>
     </Box>
   );
