@@ -1,5 +1,5 @@
 "use client"
-import * as React from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import InputLabel from '@mui/material/InputLabel';
@@ -8,6 +8,13 @@ import FormControl from '@mui/material/FormControl';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { IconButton } from '@mui/material';
+import arbitrum from '../public/images/Arbitrum.png';
+import base from '../public/images/base.png';
+import ethereum from '../public/images/ethereum.png';
+import scroll from '../public/images/scroll.png';
+import polygon from '../public/images/polygon.png';
+import optimism from '../public/images/optimism.png';
+
 
 export const FirstSection = () => {
   const [coin, setCoin] = React.useState('Polygon');
@@ -17,10 +24,14 @@ export const FirstSection = () => {
   const [prev1,setPrev1] = React.useState('');
 
   const coins = [
-    { value: "Polygon", label: "Polygon", chainid: 12322 },
-    { value: "Arbitrum", label: "Arbitrum", chainid: 11222 },
-    { value: "Base", label: "Base", chainid: 122322 }
+    { value: "Polygon", label: "Polygon", chainid: 12322, logo:'./images/polygon.png' },
+    { value: "Arbitrum", label: "Arbitrum", chainid: 11222, logo:'./images/arbitrum.png' },
+    { value: "Base", label: "Base", chainid: 122322, logo:'./images/base.png' },
+    { value: "Scroll", label: "Scroll", chainid: 122322,logo:'./images/scroll.png' },
+    { value: "Optimism", label: "Optimism", chainid: 122322, logo:'./images/optimism.png' },
+    { value: "Ethereum", label: "Ethereum", chainid: 122322, logo:'./images/ethereum.jpg' },
   ];
+
   React.useEffect(()=>{
     if(coin!== 'Polygon'&& coin1!== 'Polygon'){
         setCoin1('Polygon');
@@ -28,16 +39,17 @@ export const FirstSection = () => {
     else if(coin=== 'Polygon'&& coin1==='Polygon'){
      setCoin1(prev);
     }
-},[coin])
+  },[coin])
   
-React.useEffect(()=>{
-  if(coin1!== 'Polygon'&& coin!== 'Polygon'){
-      setCoin('Polygon');
-  }
-  else if(coin1=== 'Polygon'&& coin==='Polygon'){
-   setCoin(prev);
-  }
-},[coin1])
+  React.useEffect(()=>{
+    if(coin1!== 'Polygon'&& coin!== 'Polygon'){
+        setCoin('Polygon');
+    }
+    else if(coin1=== 'Polygon'&& coin==='Polygon'){
+        setCoin(prev);
+    }
+  },[coin1])
+  
   const handleChange = (event: SelectChangeEvent) => {
     const newValue = event.target.value as string;
     if (newValue !== coin1) {
@@ -55,12 +67,11 @@ React.useEffect(()=>{
   const handleChain = (chainId: number,label:string) => {
     setChainId(chainId);
     setPrev(label);
-    console.log(chainId);
   };
+
   const handleChain1 = (chainId: number, label:string) => {
     setChainId(chainId);
     setPrev1(label);
-    console.log(chainId);
   };
 
   const handleClick = () => {
@@ -68,8 +79,6 @@ React.useEffect(()=>{
     setCoin(coin1);
     setCoin1(temp);
   };
-
-
 
   return (
     <Box
@@ -98,7 +107,16 @@ React.useEffect(()=>{
             }}
           >
             {coins.map((coinItem) => (
-              <MenuItem key={coinItem.value} value={coinItem.value} onClick={() => handleChain(coinItem.chainid, coinItem.label )} disabled={coin1 === coinItem.value}>{coinItem.label}</MenuItem>
+              <MenuItem key={coinItem.value} value={coinItem.value} onClick={() => handleChain(coinItem.chainid, coinItem.label )} disabled={coin1 === coinItem.value}>
+                {coinItem.logo ? 
+                  <>
+                    <img src={coinItem.logo} alt={coinItem.value} style={{  height: '30px', marginRight: '10px', verticalAlign: 'middle' }} /> 
+                    {coinItem.label}
+                  </>
+                : 
+                  null
+                }
+              </MenuItem>
             ))}
           </Select>
         </FormControl>
@@ -123,7 +141,16 @@ React.useEffect(()=>{
             }}
           >
             {coins.map((coinItem) => (
-              <MenuItem key={coinItem.value} value={coinItem.value} onClick={() => handleChain1(coinItem.chainid, coinItem.label)} disabled={coin === coinItem.value}>{coinItem.label}</MenuItem>
+              <MenuItem key={coinItem.value} value={coinItem.value} onClick={() => handleChain1(coinItem.chainid, coinItem.label)} disabled={coin === coinItem.value}>
+                {coinItem.logo ? 
+                  <>
+                    <img src={coinItem.logo} alt={coinItem.value} style={{ height: '30px', marginRight: '10px', verticalAlign: 'middle' }} /> 
+                    {coinItem.label}
+                  </>
+                : 
+                  null
+                }
+              </MenuItem>
             ))}
           </Select>
         </FormControl>

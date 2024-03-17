@@ -21,17 +21,21 @@ export const Navbar = () => {
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#0b081f', padding: 3, height: '12vh' }}>
       <Box>
-        <Typography variant='h5'>Floyx</Typography>
+        <a href='#'><img src='./images/Logo.png' alt='FLOYX' style={{ maxWidth: '100%', height: 'auto', width: 100 }}></img></a>
       </Box>
       <Box sx={{ display: { xs: 'none', sm: 'none', md: 'none', lg: 'flex' }, alignItems: 'center' }}>
         <Typography variant='subtitle2' sx={{ color: isHovering ? 'rgba(255, 255, 255, 0.7)' : 'inherit' }}>Floyx Contract Address |</Typography>
-        <Button
-          variant='text'
-          onMouseEnter={() => setIsHovering(true)}
-          onMouseLeave={() => setIsHovering(false)}
-        >
-          Add To Metamask
-        </Button>
+        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+          <Button
+            variant='text'
+            sx={{ color: 'white' }}
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
+          >
+            Add To Metamask
+          </Button>
+          <img src='./images/metamask.png' alt='Metamaskicon' style={{ height: 20 }}></img>
+        </Box>
       </Box>
       <Box>
         <Button sx={{ width: "100%", backgroundColor: "#937cff", color: "black", '&:hover': { backgroundColor: '#7a5ce1' }, padding: [1] }}>Connect Wallet</Button>
@@ -53,7 +57,7 @@ export const Navbar = () => {
             horizontal: 'right',
           }}
         >
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', padding: 1, backgroundColor:'black' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', padding: 1, backgroundColor: 'black' }}>
             <Box sx={{ width: 'auto', marginLeft: 'auto' }}>
               <IconButton onClick={handleMenuClose} sx={{ color: 'white' }}>
                 <CloseIcon />
@@ -61,7 +65,7 @@ export const Navbar = () => {
             </Box>
           </Box>
           <List sx={{ backgroundColor: 'black', padding: 0 }}>
-            <ListItem onClick={handleMenuClose} sx={{'&:hover': { cursor: 'pointer' }}}>
+            <ListItem onClick={handleMenuClose} sx={{ '&:hover': { cursor: 'pointer' } }}>
               <ListItemText primary="Add To Metamask" />
             </ListItem>
           </List>

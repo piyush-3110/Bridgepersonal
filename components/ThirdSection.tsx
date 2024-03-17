@@ -13,7 +13,7 @@ export const ThirdSection = () => {
     color:'white',
     width:'85%'}}>
        <Box>
-        <Typography variant='subtitle2'>Destination Address</Typography>
+        <Typography variant='subtitle2'>Destination Address (Optional)</Typography>
         <TextField variant='outlined'  placeholder='0x346....' sx={{backgroundColor:"#211e33",color:'white', '& input::placeholder': {
                             color: 'gray' // Change placeholder color here
                         }, width:'100%'}}></TextField>
