@@ -1,8 +1,33 @@
 "use client";
-import { Box, Button, Typography } from "@mui/material";
-import React from "react";
+import {
+  Box,
+  Button,
+  Typography,
+  IconButton,
+  Popover,
+  List,
+  ListItem,
+  ListItemText,
+} from "@mui/material";
+import React, { useState } from "react";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
+import ConnectButton from "./ConnectWalletButton";
 
 export const Navbar = () => {
+  const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
+  const [isHovering, setIsHovering] = useState<boolean>(false);
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setMenuAnchor(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setMenuAnchor(null);
+  };
+
+  const open = Boolean(menuAnchor);
+
   return (
     <Box
       sx={{
@@ -22,19 +47,7 @@ export const Navbar = () => {
         <Button variant="text">Add To Metamask</Button>
       </Box>
       <Box>
-        <Button
-          sx={{
-            width: "100%",
-            backgroundColor: "#937cff",
-            color: "black",
-            "&:hover": {
-              backgroundColor: "#7a5ce1",
-            },
-            padding: [1],
-          }}
-        >
-          Connect Wallet
-        </Button>
+        <ConnectButton />
       </Box>
     </Box>
   );
