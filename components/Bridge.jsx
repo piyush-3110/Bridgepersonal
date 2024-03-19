@@ -31,7 +31,7 @@ export const Bridge = () => {
   useEffect(() => {
     if (walletAdd) {
       (async () => {
-        const _bal = await balance(fromChain);
+        const _bal = await balance();
         setBal(_bal);
       })();
     }

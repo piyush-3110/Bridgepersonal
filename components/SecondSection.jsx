@@ -1,17 +1,28 @@
+import { useWebThreeFuncs } from "@/utils/contractFunctions";
 import { Box, Button, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { formatEther } from "viem";
+import { useAccount } from "wagmi";
 
 export const SecondSection = ({ val, setVal, bal }) => {
   const fromChain = useSelector((state) => state.fromChain);
   const dispatch = useDispatch();
-  const [value, setValue] = useState();
+
+  const [balVar, setBalVar] = useState("0");
+  const { balance } = useWebThreeFuncs();
+  const { address: walletAdd } = useAccount();
+
   useEffect(() => {
-    handleMaxBtn();
-    console.log("2");
-    setVal();
-  }, [fromChain]);
+    if (walletAdd) {
+      (async () => {
+        const _bal = await balance();
+        setBalVar(formatEther(_bal.toString()));
+        // setVal(formatEther(_bal.toString()));
+        setVal("");
+      })();
+    }
+  }, [fromChain.name]);
 
   const handleChange = (event) => {
     const newValue = event.target.value;
@@ -23,7 +34,7 @@ export const SecondSection = ({ val, setVal, bal }) => {
   };
 
   async function handleMaxBtn() {
-    setVal(formatEther(bal.toString()));
+    setVal(balVar);
   }
 
   return (
@@ -53,7 +64,7 @@ export const SecondSection = ({ val, setVal, bal }) => {
             padding: "0",
           }}
         />
-        <Typography variant="subtitle2">{val} Floyx</Typography>
+        <Typography variant="subtitle2">{balVar} Floyx</Typography>
       </Box>
       <Box sx={{ display: "flex", gap: 4, alignItems: "center" }}>
         <Button variant="outlined" onClick={handleMaxBtn}>

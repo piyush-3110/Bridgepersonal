@@ -85,7 +85,8 @@ export function useWebThreeFuncs() {
 
   const { address: walletAddress } = useAccount();
 
-  async function balance(fromChain) {
+  async function balance() {
+    console.log(fromChain);
     const wagmiContractConfig = {
       abi: getAbi(fromChain.chainId),
       address: getContractAddress(fromChain.chainId),
