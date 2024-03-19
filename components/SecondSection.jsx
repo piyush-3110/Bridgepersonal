@@ -1,8 +1,18 @@
-"use client";
 import { Box, Button, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { formatEther } from "viem";
 
 export const SecondSection = ({ val, setVal, bal }) => {
+  const fromChain = useSelector((state) => state.fromChain);
+  const dispatch = useDispatch();
+  const [value, setValue] = useState();
+
+  useEffect(() => {
+    setVal(formatEther(bal.toString()));
+    setValue();
+  }, [fromChain.name]);
+
   const handleChange = (event) => {
     const newValue = event.target.value;
     // Regular expression to match only numbers and decimal points
@@ -14,6 +24,7 @@ export const SecondSection = ({ val, setVal, bal }) => {
 
   async function handleMaxBtn() {
     setVal(formatEther(bal.toString()));
+    setValue(val);
   }
 
   return (
@@ -31,7 +42,7 @@ export const SecondSection = ({ val, setVal, bal }) => {
     >
       <Box>
         <input
-          value={val}
+          value={value}
           placeholder="0.00"
           onChange={handleChange}
           style={{
@@ -43,7 +54,7 @@ export const SecondSection = ({ val, setVal, bal }) => {
             padding: "0",
           }}
         />
-        <Typography variant="subtitle2">0.00 Floyx</Typography>
+        <Typography variant="subtitle2">{val} Floyx</Typography>
       </Box>
       <Box sx={{ display: "flex", gap: 4, alignItems: "center" }}>
         <Button variant="outlined" onClick={handleMaxBtn}>

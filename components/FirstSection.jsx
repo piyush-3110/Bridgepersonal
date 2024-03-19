@@ -11,13 +11,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setFromChain, setToChain } from "@/lib/features/chainSlice";
 
 export const FirstSection = () => {
-  // interface Coins {
-  //   value: string;
-  //   label: string;
-  //   chainId: number;
-  //   logo: string;
-  // }
-
   const fromChain = useSelector((state) => state.fromChain);
   const toChain = useSelector((state) => state.toChain);
   const dispatch = useDispatch();
@@ -65,8 +58,6 @@ export const FirstSection = () => {
     const tempChain = { ...fromChain };
     dispatch(setFromChain({ ...toChain }));
     dispatch(setToChain({ ...tempChain }));
-    // props.setFromChain({ ...toChain });
-    // props.setToChain({ ...tempChain });
   }
 
   function handleChange(event, id) {
@@ -74,6 +65,7 @@ export const FirstSection = () => {
     const selectedChainObject = coins.find(
       (coin) => coin.value === selectedChain
     );
+
     if (id === "from-select") {
       dispatch(
         setFromChain({
@@ -81,10 +73,16 @@ export const FirstSection = () => {
           chainId: selectedChainObject.chainId,
         })
       );
-      // props.setFromChain({
-      //   name: selectedChainObject.value,
-      //   chainId: selectedChainObject.chainId,
-      // });
+
+      if (selectedChain !== "Polygon") {
+        const polygonChain = coins.find((coin) => coin.value === "Polygon");
+        dispatch(
+          setToChain({
+            name: polygonChain.value,
+            chainId: polygonChain.chainId,
+          })
+        );
+      }
     } else if (id === "to-select") {
       dispatch(
         setToChain({
@@ -92,10 +90,16 @@ export const FirstSection = () => {
           chainId: selectedChainObject.chainId,
         })
       );
-      // props.setToChain({
-      //   name: selectedChainObject.value,
-      //   chainId: selectedChainObject.chainId,
-      // });
+
+      if (selectedChain !== "Polygon") {
+        const polygonChain = coins.find((coin) => coin.value === "Polygon");
+        dispatch(
+          setFromChain({
+            name: polygonChain.value,
+            chainId: polygonChain.chainId,
+          })
+        );
+      }
     }
   }
 
@@ -111,7 +115,7 @@ export const FirstSection = () => {
       <Box sx={{ minWidth: { xs: "41%", sm: "43%" } }}>
         <FormControl fullWidth>
           <InputLabel
-            id="demo-simple-select-label"
+            id="from-chain-label"
             sx={{ color: "gray", textAlign: "center" }}
           >
             From
@@ -119,10 +123,8 @@ export const FirstSection = () => {
           <Select
             sx={{ backgroundColor: ["#211e33"], color: "white" }}
             value={fromChain && fromChain.name}
-            label="Polygon"
-            onChange={(e) => {
-              handleChange(e, "from-select");
-            }}
+            label="From"
+            onChange={(e) => handleChange(e, "from-select")}
             MenuProps={{
               PaperProps: {
                 sx: {
@@ -136,9 +138,15 @@ export const FirstSection = () => {
               <MenuItem
                 key={coinItem.value}
                 value={coinItem.value}
-                disabled={fromChain && fromChain.name === coinItem.value}
+                disabled={
+                  (toChain && toChain.name === coinItem.value) ||
+                  (fromChain && fromChain.name === coinItem.value)
+                }
               >
-                {coinItem.label}
+                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                  <img src={coinItem.logo} alt="Logo" style={{ height: 20 }} />
+                  {coinItem.label}
+                </Box>
               </MenuItem>
             ))}
           </Select>
@@ -150,7 +158,7 @@ export const FirstSection = () => {
       <Box sx={{ minWidth: { xs: "41%", sm: "43%" } }}>
         <FormControl fullWidth>
           <InputLabel
-            id="demo-simple-select-label"
+            id="to-chain-label"
             sx={{ color: "gray", textAlign: "center" }}
           >
             To
@@ -159,10 +167,8 @@ export const FirstSection = () => {
             sx={{ backgroundColor: "#211e33", color: "white" }}
             variant="outlined"
             value={toChain && toChain.name}
-            label="Arbitrum"
-            onChange={(e) => {
-              handleChange(e, "to-select");
-            }}
+            label="To"
+            onChange={(e) => handleChange(e, "to-select")}
             MenuProps={{
               PaperProps: {
                 sx: {
@@ -176,9 +182,15 @@ export const FirstSection = () => {
               <MenuItem
                 key={coinItem.value}
                 value={coinItem.value}
-                disabled={toChain && toChain.name === coinItem.value}
+                disabled={
+                  (fromChain && fromChain.name === coinItem.value) ||
+                  (toChain && toChain.name === coinItem.value)
+                }
               >
-                {coinItem.label}
+                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                  <img src={coinItem.logo} alt="Logo" style={{ height: 20 }} />
+                  {coinItem.label}
+                </Box>
               </MenuItem>
             ))}
           </Select>

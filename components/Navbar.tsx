@@ -40,7 +40,7 @@ export const Navbar = () => {
       }}
     >
       <Box>
-        <Typography variant="h5">Floyx</Typography>
+       
         <a href="#">
           <img
             src="./images/Logo.png"
@@ -53,6 +53,7 @@ export const Navbar = () => {
         sx={{
           display: { xs: "none", sm: "none", md: "none", lg: "flex" },
           alignItems: "center",
+         
         }}
       >
         <Typography
