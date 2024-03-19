@@ -1,14 +1,12 @@
 import { useWebThreeFuncs } from "@/utils/contractFunctions";
 import { Box, Button, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { formatEther } from "viem";
 import { useAccount } from "wagmi";
 
-export const SecondSection = ({ val, setVal, bal }) => {
+export const SecondSection = ({ val, setVal }) => {
   const fromChain = useSelector((state) => state.fromChain);
-  const dispatch = useDispatch();
-  const [value, setValue] = useState("");
   const [balVar, setBalVar] = useState("0");
   const { balance } = useWebThreeFuncs();
   const { address: walletAdd } = useAccount();
@@ -18,15 +16,13 @@ export const SecondSection = ({ val, setVal, bal }) => {
       (async () => {
         const _bal = await balance();
         setBalVar(formatEther(_bal.toString()));
-        setVal(formatEther(_bal.toString()));
-        setValue("");
+        setVal("");
       })();
     }
   }, [fromChain.name]);
 
   const handleChange = (event) => {
     const newValue = event.target.value;
-    // Regular expression to match only numbers and decimal points
     const regex = /^\d*\.?\d*$/;
     if (regex.test(newValue)) {
       setVal(newValue);
@@ -35,7 +31,6 @@ export const SecondSection = ({ val, setVal, bal }) => {
 
   async function handleMaxBtn() {
     setVal(balVar);
-    setValue(balVar);
   }
 
   return (
@@ -53,7 +48,7 @@ export const SecondSection = ({ val, setVal, bal }) => {
     >
       <Box>
         <input
-          value={value}
+          value={val}
           placeholder="0.00"
           onChange={handleChange}
           style={{
@@ -65,7 +60,7 @@ export const SecondSection = ({ val, setVal, bal }) => {
             padding: "0",
           }}
         />
-        <Typography variant="subtitle2">{val} Floyx</Typography>
+        <Typography variant="subtitle2">{balVar} Floyx</Typography>
       </Box>
       <Box sx={{ display: "flex", gap: 4, alignItems: "center" }}>
         <Button variant="outlined" onClick={handleMaxBtn}>
