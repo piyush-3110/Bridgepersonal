@@ -1,18 +1,20 @@
 "use client";
-import React, { useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
+import { formatEther } from "viem";
 
-export const SecondSection: React.FC = () => {
-  const [val, setVal] = useState<string>("");
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue: string = event.target.value;
+export const SecondSection = ({ val, setVal, bal }) => {
+  const handleChange = (event) => {
+    const newValue = event.target.value;
     // Regular expression to match only numbers and decimal points
-    const regex: RegExp = /^\d*\.?\d*$/;
+    const regex = /^\d*\.?\d*$/;
     if (regex.test(newValue)) {
       setVal(newValue);
     }
   };
+
+  async function handleMaxBtn() {
+    setVal(formatEther(bal.toString()));
+  }
 
   return (
     <Box
@@ -44,7 +46,9 @@ export const SecondSection: React.FC = () => {
         <Typography variant="subtitle2">0.00 Floyx</Typography>
       </Box>
       <Box sx={{ display: "flex", gap: 4, alignItems: "center" }}>
-        <Button variant="outlined">Max</Button>
+        <Button variant="outlined" onClick={handleMaxBtn}>
+          Max
+        </Button>
         <Typography variant="subtitle2">FLOYX</Typography>
       </Box>
     </Box>

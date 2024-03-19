@@ -1,7 +1,7 @@
 import ThemeRegistry from "@/theme/ThemeRegistry";
 import "./globals.css";
 import { Inter } from "next/font/google";
-import Web3ModalProvider from "@/context";
+import Provider from "@/lib/Provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <ThemeRegistry>
         <body className={inter.className}>
-          <Web3ModalProvider>{children}</Web3ModalProvider>
+          <Provider>{children}</Provider>
         </body>
       </ThemeRegistry>
     </html>

@@ -14,7 +14,6 @@ import {
 export const projectId = "2ce91b17a981d0ea97fdf33fd0354551";
 
 if (!projectId) throw new Error("Project ID is not defined");
-
 const metadata = {
   name: "Web3Modal",
   description: "Web3Modal Example",

@@ -1,9 +1,18 @@
 "use client";
+import { useWebThreeFuncs } from "@/utils/contractFunctions";
 import { Box, TextField, Typography, Button } from "@mui/material";
-import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { formatEther } from "viem";
 
-export const ThirdSection = () => {
-  const [fee, setFee] = useState("0.00");
+export const ThirdSection = ({ val, bal, gasFee }) => {
+  const { bridge } = useWebThreeFuncs();
+  console.log(+val);
+  console.log(bal);
+  async function handleTransfer() {
+    const demn = await bridge(val);
+    console.log(val);
+  }
+
   return (
     <Box
       sx={{
@@ -27,17 +36,23 @@ export const ThirdSection = () => {
             backgroundColor: "#211e33",
             color: "white",
             "& input::placeholder": {
-              color: "gray", // Change placeholder color here
+              color: "gray",
             },
             width: "100%",
           }}
         ></TextField>
       </Box>
       <Box
-        sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          width: "100%",
+        }}
       >
         <Typography variant="subtitle2">Est. Fee</Typography>
-        <Typography variant="subtitle2">{fee}</Typography>
+        <Typography variant="subtitle2">
+          {gasFee ? formatEther(gasFee[0].toString()) * 1.5 : "0.0"}
+        </Typography>
       </Box>
       <Button
         sx={{
@@ -47,11 +62,20 @@ export const ThirdSection = () => {
           "&:hover": {
             backgroundColor: "#7a5ce1",
           },
+          "&:disabled": {
+            cursor: "not-allowed",
+          },
           padding: [1.5],
         }}
+        disabled={bal <= 0}
       >
-        Connect Wallet
+        Transfer Tokens
       </Button>
+      {bal <= 0 ? (
+        <Typography variant="subtitle2" sx={{ color: "red" }}>
+          You don't have enough tokens
+        </Typography>
+      ) : null}
     </Box>
   );
 };

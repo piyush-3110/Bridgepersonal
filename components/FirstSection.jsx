@@ -1,109 +1,103 @@
 "use client";
 import * as React from "react";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Select from "@mui/material/Select";
 import { IconButton } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { setFromChain, setToChain } from "@/lib/features/chainSlice";
 
 export const FirstSection = () => {
-  const [coin, setCoin] = React.useState<string>("Polygon");
-  const [coin1, setCoin1] = React.useState<string>("Arbitrum");
-  const [chainId, setChainId] = React.useState<number | undefined>();
-  const [prev, setPrev] = React.useState("");
-  const [prev1, setPrev1] = React.useState("");
+  // interface Coins {
+  //   value: string;
+  //   label: string;
+  //   chainId: number;
+  //   logo: string;
+  // }
 
-  interface Coins {
-    value: string;
-    label: string;
-    chainId: number;
-    logo: string;
-  }
+  const fromChain = useSelector((state) => state.fromChain);
+  const toChain = useSelector((state) => state.toChain);
+  const dispatch = useDispatch();
 
-  const coins: Coins[] = [
+  const coins = [
     {
       value: "Polygon",
       label: "Polygon",
-      chainId: 12322,
+      chainId: 10109,
       logo: "./images/polygon.png",
     },
     {
       value: "Arbitrum",
       label: "Arbitrum",
-      chainId: 11222,
+      chainId: 10231,
       logo: "./images/arbitrum.png",
     },
     {
       value: "Base",
       label: "Base",
-      chainId: 122322,
+      chainId: 10245,
       logo: "./images/base.png",
     },
     {
-      value: "Scroll",
-      label: "Scroll",
-      chainId: 122322,
+      value: "Binance",
+      label: "Binance",
+      chainId: 10102,
       logo: "./images/scroll.png",
     },
     {
       value: "Optimism",
       label: "Optimism",
-      chainId: 122322,
+      chainId: 10232,
       logo: "./images/optimism.png",
     },
     {
       value: "Ethereum",
       label: "Ethereum",
-      chainId: 122322,
+      chainId: 10161,
       logo: "./images/ethereum.jpg",
     },
   ];
-  React.useEffect(() => {
-    if (coin !== "Polygon" && coin1 !== "Polygon") {
-      setCoin1("Polygon");
-    } else if (coin === "Polygon" && coin1 === "Polygon") {
-      setCoin1(prev);
-    }
-  }, [coin]);
 
-  React.useEffect(() => {
-    if (coin1 !== "Polygon" && coin !== "Polygon") {
-      setCoin("Polygon");
-    } else if (coin1 === "Polygon" && coin === "Polygon") {
-      setCoin(prev);
-    }
-  }, [coin1]);
-  const handleChange = (event: SelectChangeEvent) => {
-    const newValue = event.target.value as string;
-    if (newValue !== coin1) {
-      setCoin(newValue);
-    }
-  };
+  function switchChains() {
+    const tempChain = { ...fromChain };
+    dispatch(setFromChain({ ...toChain }));
+    dispatch(setToChain({ ...tempChain }));
+    // props.setFromChain({ ...toChain });
+    // props.setToChain({ ...tempChain });
+  }
 
-  const handleChangeCoin1 = (event: SelectChangeEvent) => {
-    const newValue = event.target.value as string;
-    if (newValue !== coin) {
-      setCoin1(newValue);
+  function handleChange(event, id) {
+    const selectedChain = event.target.value;
+    const selectedChainObject = coins.find(
+      (coin) => coin.value === selectedChain
+    );
+    if (id === "from-select") {
+      dispatch(
+        setFromChain({
+          name: selectedChainObject.value,
+          chainId: selectedChainObject.chainId,
+        })
+      );
+      // props.setFromChain({
+      //   name: selectedChainObject.value,
+      //   chainId: selectedChainObject.chainId,
+      // });
+    } else if (id === "to-select") {
+      dispatch(
+        setToChain({
+          name: selectedChainObject.value,
+          chainId: selectedChainObject.chainId,
+        })
+      );
+      // props.setToChain({
+      //   name: selectedChainObject.value,
+      //   chainId: selectedChainObject.chainId,
+      // });
     }
-  };
-
-  const handleChain = (chainId: number, label: string) => {
-    setChainId(chainId);
-    setPrev(label);
-  };
-  const handleChain1 = (chainId: number, label: string) => {
-    setChainId(chainId);
-    setPrev1(label);
-  };
-
-  const handleClick = () => {
-    const temp = coin;
-    setCoin(coin1);
-    setCoin1(temp);
-  };
+  }
 
   return (
     <Box
@@ -116,16 +110,20 @@ export const FirstSection = () => {
     >
       <Box sx={{ minWidth: { xs: "41%", sm: "43%" } }}>
         <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label" sx={{ color: "gray" }}>
-            {coin}
+          <InputLabel
+            id="demo-simple-select-label"
+            sx={{ color: "gray", textAlign: "center" }}
+          >
+            From
           </InputLabel>
           <Select
             sx={{ backgroundColor: ["#211e33"], color: "white" }}
-            value={coin}
+            value={fromChain && fromChain.name}
             label="Polygon"
-            onChange={handleChange}
+            onChange={(e) => {
+              handleChange(e, "from-select");
+            }}
             MenuProps={{
-              // Overriding the default MenuItem styles
               PaperProps: {
                 sx: {
                   backgroundColor: "#0b081f",
@@ -138,8 +136,7 @@ export const FirstSection = () => {
               <MenuItem
                 key={coinItem.value}
                 value={coinItem.value}
-                onClick={() => handleChain(coinItem.chainId, coinItem.label)}
-                disabled={coin1 === coinItem.value}
+                disabled={fromChain && fromChain.name === coinItem.value}
               >
                 {coinItem.label}
               </MenuItem>
@@ -147,20 +144,25 @@ export const FirstSection = () => {
           </Select>
         </FormControl>
       </Box>
-      <IconButton sx={{ color: "blue", marginX: "3%" }} onClick={handleClick}>
+      <IconButton sx={{ color: "blue", marginX: "3%" }} onClick={switchChains}>
         <SwapHorizIcon />
       </IconButton>
       <Box sx={{ minWidth: { xs: "41%", sm: "43%" } }}>
         <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label" sx={{ color: "gray" }}>
-            {coin1}
+          <InputLabel
+            id="demo-simple-select-label"
+            sx={{ color: "gray", textAlign: "center" }}
+          >
+            To
           </InputLabel>
           <Select
             sx={{ backgroundColor: "#211e33", color: "white" }}
             variant="outlined"
-            value={coin1}
+            value={toChain && toChain.name}
             label="Arbitrum"
-            onChange={handleChangeCoin1}
+            onChange={(e) => {
+              handleChange(e, "to-select");
+            }}
             MenuProps={{
               PaperProps: {
                 sx: {
@@ -174,8 +176,7 @@ export const FirstSection = () => {
               <MenuItem
                 key={coinItem.value}
                 value={coinItem.value}
-                onClick={() => handleChain1(coinItem.chainId, coinItem.label)}
-                disabled={coin === coinItem.value}
+                disabled={toChain && toChain.name === coinItem.value}
               >
                 {coinItem.label}
               </MenuItem>

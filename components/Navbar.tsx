@@ -77,17 +77,7 @@ export const Navbar = () => {
         </Box>
       </Box>
       <Box>
-        <Button
-          sx={{
-            width: "100%",
-            backgroundColor: "#937cff",
-            color: "black",
-            "&:hover": { backgroundColor: "#7a5ce1" },
-            padding: [1],
-          }}
-        >
-          Connect Wallet
-        </Button>
+        <ConnectButton />
       </Box>
       <Box
         sx={{ display: { xs: "block", sm: "block", md: "block", lg: "none" } }}
