@@ -7,11 +7,11 @@ export const SecondSection = ({ val, setVal, bal }) => {
   const fromChain = useSelector((state) => state.fromChain);
   const dispatch = useDispatch();
   const [value, setValue] = useState();
-
   useEffect(() => {
-    setVal(formatEther(bal.toString()));
-    setValue();
-  }, [fromChain.name]);
+    handleMaxBtn();
+    console.log("2");
+    setVal();
+  }, [fromChain]);
 
   const handleChange = (event) => {
     const newValue = event.target.value;
@@ -24,7 +24,6 @@ export const SecondSection = ({ val, setVal, bal }) => {
 
   async function handleMaxBtn() {
     setVal(formatEther(bal.toString()));
-    setValue(val);
   }
 
   return (
@@ -42,7 +41,7 @@ export const SecondSection = ({ val, setVal, bal }) => {
     >
       <Box>
         <input
-          value={value}
+          value={val}
           placeholder="0.00"
           onChange={handleChange}
           style={{
