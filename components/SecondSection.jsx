@@ -1,16 +1,27 @@
+import { useWebThreeFuncs } from "@/utils/contractFunctions";
 import { Box, Button, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { formatEther } from "viem";
+import { useAccount } from "wagmi";
 
 export const SecondSection = ({ val, setVal, bal }) => {
   const fromChain = useSelector((state) => state.fromChain);
   const dispatch = useDispatch();
-  const [value, setValue] = useState();
+  const [value, setValue] = useState("");
+  const [balVar, setBalVar] = useState("0");
+  const { balance } = useWebThreeFuncs();
+  const { address: walletAdd } = useAccount();
 
   useEffect(() => {
-    setVal(formatEther(bal.toString()));
-    setValue();
+    if (walletAdd) {
+      (async () => {
+        const _bal = await balance();
+        setBalVar(formatEther(_bal.toString()));
+        setVal(formatEther(_bal.toString()));
+        setValue("");
+      })();
+    }
   }, [fromChain.name]);
 
   const handleChange = (event) => {
@@ -23,8 +34,8 @@ export const SecondSection = ({ val, setVal, bal }) => {
   };
 
   async function handleMaxBtn() {
-    setVal(formatEther(bal.toString()));
-    setValue(val);
+    setVal(balVar);
+    setValue(balVar);
   }
 
   return (
