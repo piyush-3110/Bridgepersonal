@@ -7,7 +7,8 @@ import { useCallback, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useWebThreeFuncs } from "@/utils/contractFunctions";
 import { useAccount } from "wagmi";
-
+import { setBal, selectBalValue } from "@/lib/features/balSlice";
+import { useSelector } from "react-redux";
 export const Bridge = () => {
   const [val, setVal] = useState("");
   const { balance, bridge } = useWebThreeFuncs();
@@ -19,8 +20,8 @@ export const Bridge = () => {
     name: "Arbitrum",
     chainId: 10231,
   });
-  const [bal, setBal] = useState(0);
-
+  const bal = useSelector(selectBalValue);
+  // global bal
   const { address: walletAdd } = useAccount();
 
   // const { data: bal, isFetching: balFetching } = useQuery({

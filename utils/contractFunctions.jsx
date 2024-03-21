@@ -80,8 +80,8 @@ function getChainId(chainId) {
 }
 
 export function useWebThreeFuncs() {
-  const fromChain = useSelector((state) => state.fromChain);
-  const toChain = useSelector((state) => state.toChain);
+  const fromChain = useSelector((state) => state.chain.fromChain);
+  const toChain = useSelector((state) => state.chain.toChain);
 
   const { address: walletAddress } = useAccount();
 

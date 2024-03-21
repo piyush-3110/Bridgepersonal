@@ -9,11 +9,28 @@ import Select from "@mui/material/Select";
 import { IconButton } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setFromChain, setToChain } from "@/lib/features/chainSlice";
-
+import { selectInputValue } from "@/lib/features/inputSlice";
 export const FirstSection = () => {
-  const fromChain = useSelector((state) => state.fromChain);
-  const toChain = useSelector((state) => state.toChain);
+  const fromChain = useSelector((state) => state.chain.fromChain);
+  const toChain = useSelector((state) => state.chain.toChain);
   const dispatch = useDispatch();
+
+  const inputFieldValue = useSelector(selectInputValue);
+  //debounced function
+  function estfee(inputVal) {
+    console.log(inputVal + "a");
+    console.log(fromChain);
+  }
+  //start of debouce function
+  const [debouncedInputValue, setDebouncedInputValue] =
+    React.useState(inputFieldValue);
+  React.useEffect(() => {
+    const fee = setTimeout(() => {
+      estfee(inputFieldValue);
+    }, 2000);
+
+    return () => clearTimeout(getData);
+  }, [inputFieldValue]);
 
   const coins = [
     {

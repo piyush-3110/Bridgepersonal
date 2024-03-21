@@ -4,11 +4,10 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { formatEther } from "viem";
 import { useAccount } from "wagmi";
-
-export const SecondSection = ({ val, setVal, bal }) => {
-  const fromChain = useSelector((state) => state.fromChain);
+import { setValue } from "@/lib/features/inputSlice";
+export const SecondSection = ({ val, setVal }) => {
+  const fromChain = useSelector((state) => state.chain.fromChain);
   const dispatch = useDispatch();
-
   const [balVar, setBalVar] = useState("0");
   const { balance } = useWebThreeFuncs();
   const { address: walletAdd } = useAccount();
@@ -18,7 +17,6 @@ export const SecondSection = ({ val, setVal, bal }) => {
       (async () => {
         const _bal = await balance();
         setBalVar(formatEther(_bal.toString()));
-        // setVal(formatEther(_bal.toString()));
         setVal("");
       })();
     }
@@ -26,10 +24,10 @@ export const SecondSection = ({ val, setVal, bal }) => {
 
   const handleChange = (event) => {
     const newValue = event.target.value;
-    // Regular expression to match only numbers and decimal points
     const regex = /^\d*\.?\d*$/;
     if (regex.test(newValue)) {
       setVal(newValue);
+      dispatch(setValue(newValue));
     }
   };
 
