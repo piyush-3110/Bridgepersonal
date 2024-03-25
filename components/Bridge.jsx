@@ -1,4 +1,4 @@
-"use Client";
+"use client";
 import { Box } from "@mui/system";
 import { FirstSection } from "./FirstSection";
 import { SecondSection } from "./SecondSection";
