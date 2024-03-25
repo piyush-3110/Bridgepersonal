@@ -1,18 +1,54 @@
 "use client";
+import { setBal } from "@/lib/features/balSlice";
 import { useWebThreeFuncs } from "@/utils/contractFunctions";
 import { Box, TextField, Typography, Button } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import { formatEther } from "viem";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { TransactionExecutionError, formatEther } from "viem";
+import { useAccount } from "wagmi";
 
-export const ThirdSection = ({ val, bal, gasFee }) => {
-  const { bridge } = useWebThreeFuncs();
-  console.log(+val);
-  console.log(bal);
+export const ThirdSection = () => {
+  const estGasFee = useSelector((state) => state.estGasFee.value);
+  const bal = useSelector((state) => state.bal.value);
+  const tokens = useSelector((state) => state.input.value);
+  const dispatch = useDispatch();
+  const { address: walletAdd } = useAccount();
+
+  const [transferBtnClicked, setTransferBtnClicked] = useState(false);
+
+  const { bridge, balance } = useWebThreeFuncs();
   async function handleTransfer() {
-    const demn = await bridge(val);
-    console.log(val);
+    setTransferBtnClicked(true);
+    if (walletAdd && bal > 0 && tokens > 0) {
+      try {
+        const data = await bridge(tokens);
+        console.log(data);
+        if (data.status === "success") {
+          const newBal = await balance();
+          console.log(formatEther(newBal.toString()));
+          dispatch(setBal(formatEther(newBal.toString())));
+        }
+        setTransferBtnClicked(false);
+        return;
+      } catch (error) {
+        if (
+          error.name === "notSufficientGas" ||
+          error.name === "notEnoughFloyxTokens"
+        ) {
+          // Handle the not enough tokens for the gas and value for the transaction to process error
+          console.log(error.errorMessage);
+        } else if (error instanceof TransactionExecutionError) {
+          console.log("you rejected the transaction");
+        }
+        // console.log(error);
+        setTransferBtnClicked(false);
+      }
+    }
   }
-
+  useEffect(() => {
+    setTransferBtnClicked(false);
+  }, [walletAdd]);
   return (
     <Box
       sx={{
@@ -50,9 +86,7 @@ export const ThirdSection = ({ val, bal, gasFee }) => {
         }}
       >
         <Typography variant="subtitle2">Est. Fee</Typography>
-        <Typography variant="subtitle2">
-          {gasFee ? formatEther(gasFee[0].toString()) * 1.5 : "0.0"}
-        </Typography>
+        <Typography variant="subtitle2">{estGasFee * 1.5}</Typography>
       </Box>
       <Button
         sx={{
@@ -67,13 +101,24 @@ export const ThirdSection = ({ val, bal, gasFee }) => {
           },
           padding: [1.5],
         }}
-        disabled={bal <= 0}
+        disabled={
+          (!walletAdd && transferBtnClicked) || (bal <= 0 && transferBtnClicked)
+        }
+        onClick={handleTransfer}
       >
         Transfer Tokens
       </Button>
-      {bal <= 0 ? (
+      {!walletAdd && transferBtnClicked ? (
+        <Typography variant="subtitle2" sx={{ color: "red" }}>
+          Please connect your wallet
+        </Typography>
+      ) : bal <= 0 && transferBtnClicked ? (
         <Typography variant="subtitle2" sx={{ color: "red" }}>
           You don't have enough tokens
+        </Typography>
+      ) : tokens <= 0 && transferBtnClicked ? (
+        <Typography variant="subtitle2" sx={{ color: "red" }}>
+          You must transfer more than 0 tokens
         </Typography>
       ) : null}
     </Box>

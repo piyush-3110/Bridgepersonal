@@ -3,49 +3,7 @@ import { Box } from "@mui/system";
 import { FirstSection } from "./FirstSection";
 import { SecondSection } from "./SecondSection";
 import { ThirdSection } from "./ThirdSection";
-import { useCallback, useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { useWebThreeFuncs } from "@/utils/contractFunctions";
-import { useAccount } from "wagmi";
-import { setBal, selectBalValue } from "@/lib/features/balSlice";
-import { useSelector } from "react-redux";
 export const Bridge = () => {
-  const [val, setVal] = useState("");
-  const { balance, bridge } = useWebThreeFuncs();
-  const [fromChain, setFromChain] = useState({
-    name: "Polygon",
-    chainId: 10109,
-  });
-  const [toChain, setToChain] = useState({
-    name: "Arbitrum",
-    chainId: 10231,
-  });
-  const bal = useSelector(selectBalValue);
-  // global bal
-  const { address: walletAdd } = useAccount();
-
-  // const { data: bal, isFetching: balFetching } = useQuery({
-  //   queryKey: ["userBal"],
-  //   queryFn: balance,
-  // });
-
-  useEffect(() => {
-    if (walletAdd) {
-      (async () => {
-        const _bal = await balance();
-        setBal(_bal);
-      })();
-    }
-  }, [walletAdd, fromChain]);
-
-  // const { data: gasFee, isFetching: gasFetching } = useQuery({
-  //   queryKey: ["estimatedSendFee"],
-  //   queryFn: async () => {
-  //     const res = await bridge(val);
-  //     return res;
-  //   },
-  // });
-
   return (
     <Box
       sx={{
@@ -54,6 +12,7 @@ export const Bridge = () => {
         justifyContent: "center",
         alignItems: "center",
         minHeight: "85vh",
+        position: "relative",
       }}
     >
       <Box
@@ -80,19 +39,9 @@ export const Bridge = () => {
           paddingY: "8px",
         }}
       >
-        <FirstSection
-          fromChain={fromChain}
-          setFromChain={setFromChain}
-          toChain={toChain}
-          setToChain={setToChain}
-        />
-        <SecondSection val={val} setVal={setVal} bal={bal} />
-        <ThirdSection
-          val={val}
-          bal={bal}
-          // balFetching={balFetching}
-          gasFee={0}
-        />
+        <FirstSection />
+        <SecondSection />
+        <ThirdSection />
       </Box>
     </Box>
   );
