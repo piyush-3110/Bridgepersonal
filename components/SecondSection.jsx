@@ -5,22 +5,34 @@ import { useDispatch, useSelector } from "react-redux";
 import { formatEther } from "viem";
 import { useAccount } from "wagmi";
 import { setValue } from "@/lib/features/inputSlice";
-export const SecondSection = ({ val, setVal }) => {
+import { setEstGasFee } from "@/lib/features/EstGasFeeSlice";
+import { setBal } from "@/lib/features/balSlice";
+export const SecondSection = () => {
   const fromChain = useSelector((state) => state.chain.fromChain);
   const dispatch = useDispatch();
   const [balVar, setBalVar] = useState("0");
-  const { balance } = useWebThreeFuncs();
+  const [maxBtnClicked, setMaxBtnClicked] = useState(false);
+  const { balance, getEstimatedFee } = useWebThreeFuncs();
   const { address: walletAdd } = useAccount();
+
+  const [val, setVal] = useState("");
 
   useEffect(() => {
     if (walletAdd) {
       (async () => {
         const _bal = await balance();
-        setBalVar(formatEther(_bal.toString()));
+        const balStr = _bal.toString();
+        setBalVar(formatEther(balStr));
+        dispatch(setBal(formatEther(balStr)));
         setVal("");
       })();
     }
-  }, [fromChain.name]);
+  }, [fromChain.name, walletAdd]);
+
+  async function estfee(inputVal) {
+    const data = await getEstimatedFee(inputVal);
+    dispatch(setEstGasFee(formatEther(data[0].toString())));
+  }
 
   const handleChange = (event) => {
     const newValue = event.target.value;
@@ -28,48 +40,91 @@ export const SecondSection = ({ val, setVal }) => {
     if (regex.test(newValue)) {
       setVal(newValue);
       dispatch(setValue(newValue));
+      if (walletAdd) {
+        const fee = setTimeout(() => {
+          estfee(newValue);
+        }, 2000);
+
+        return () => clearTimeout(fee);
+      }
     }
   };
 
   async function handleMaxBtn() {
-    setVal(balVar);
+    if (!walletAdd) {
+      setMaxBtnClicked(true);
+    } else {
+      setVal(balVar);
+      setMaxBtnClicked(false);
+    }
   }
+
+  useEffect(() => {
+    setMaxBtnClicked(false);
+  }, [walletAdd]);
 
   return (
     <Box
       sx={{
         display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
+        flexDirection: "column",
+        gap: 1,
+        justifyContent: "center",
+
         color: "white",
         width: "85%",
-        padding: 2,
-        backgroundColor: "#211e33",
-        borderRadius: "4px",
       }}
     >
-      <Box>
-        <input
-          value={val}
-          placeholder="0.00"
-          onChange={handleChange}
-          style={{
-            border: "none",
-            outline: "none",
-            backgroundColor: "transparent",
-            width: "7rem",
-            color: "white",
-            padding: "0",
-          }}
-        />
-        <Typography variant="subtitle2">{balVar} Floyx</Typography>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          color: "white",
+          padding: 2,
+          backgroundColor: "#211e33",
+          borderRadius: "4px",
+        }}
+      >
+        <Box>
+          <input
+            value={val}
+            placeholder="0.00"
+            onChange={handleChange}
+            style={{
+              border: "none",
+              outline: "none",
+              backgroundColor: "transparent",
+              width: "7rem",
+              color: "white",
+              padding: "0",
+            }}
+          />
+          <Typography variant="subtitle2">{balVar} Floyx</Typography>
+        </Box>
+        <Box sx={{ display: "flex", gap: 4, alignItems: "center" }}>
+          <Button
+            variant="outlined"
+            onClick={handleMaxBtn}
+            disabled={!walletAdd && maxBtnClicked}
+            sx={{
+              "&:disabled": {
+                border: "1px red solid",
+                color: "red",
+                cursor: "not-allowed",
+              },
+            }}
+          >
+            Max
+          </Button>
+          <Typography variant="subtitle2">FLOYX</Typography>
+        </Box>
       </Box>
-      <Box sx={{ display: "flex", gap: 4, alignItems: "center" }}>
-        <Button variant="outlined" onClick={handleMaxBtn}>
-          Max
-        </Button>
-        <Typography variant="subtitle2">FLOYX</Typography>
-      </Box>
+      {!walletAdd && maxBtnClicked && (
+        <Typography variant="subtitle2" sx={{ color: "red" }}>
+          Please connect your wallet
+        </Typography>
+      )}
     </Box>
   );
 };
