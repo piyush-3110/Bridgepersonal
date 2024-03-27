@@ -36,11 +36,12 @@ export const Navbar = () => {
         justifyContent: "space-between",
         backgroundColor: "#0b081f",
         padding: 3,
+        width:"100%",
         height: "10vh",
       }}
     >
       <Box>
-       
+      
         <a href="#">
           <img
             src="./images/Logo.png"
@@ -52,6 +53,9 @@ export const Navbar = () => {
       <Box
         sx={{
           display: { xs: "none", sm: "none", md: "none", lg: "flex" },
+          position:"absolute",
+          left:"50%",
+          transform: "translateX(-50%)",
           alignItems: "center",
          
         }}

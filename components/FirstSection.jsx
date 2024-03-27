@@ -112,6 +112,7 @@ export const FirstSection = () => {
         alignItems: "center",
         justifyContent: "center",
         width: "85%",
+        paddingTop: "12px",
       }}
     >
       <Box sx={{ minWidth: { xs: "41%", sm: "43%" } }}>
