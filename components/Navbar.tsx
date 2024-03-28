@@ -94,7 +94,7 @@ export const Navbar = () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-   <Popup/>
+     <Popup onClose={handleClose} /> 
       </Modal>
           <img
             src="./images/metamask.png"
@@ -135,7 +135,7 @@ export const Navbar = () => {
           >
             <Box sx={{ width: "auto", marginLeft: "auto" }}>
               <IconButton onClick={handleMenuClose} sx={{ color: "white" }}>
-                <CloseIcon />
+                <CloseIcon/>
               </IconButton>
             </Box>
           </Box>
@@ -144,7 +144,7 @@ export const Navbar = () => {
               onClick={handleMenuClose}
               sx={{ "&:hover": { cursor: "pointer" } }}
             >
-              <ListItemText primary="Add To Metamask" />
+              <ListItemText onClick={handleOpen} primary="Add To Metamask" />
             </ListItem>
           </List>
         </Popover>

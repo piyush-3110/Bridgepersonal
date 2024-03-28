@@ -102,7 +102,13 @@ export const SecondSection = () => {
           />
           <Typography variant="subtitle2">{balVar} Floyx</Typography>
         </Box>
-        <Box sx={{ display: "flex", gap: 4, alignItems: "center" }}>
+        <Box
+          sx={{
+            display: "flex",
+            gap: { xs: "8px", sm: 4 },
+            alignItems: "center",
+          }}
+        >
           <Button
             variant="outlined"
             onClick={handleMaxBtn}

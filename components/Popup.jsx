@@ -2,8 +2,9 @@
 import React, { useState } from "react";
 import { Box, IconButton, Typography, Snackbar } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-
-export const Popup = () => {
+import CloseIcon from "@mui/icons-material/Close";
+import Close from "@mui/icons-material/Close";
+export const Popup = ({ onClose }) => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
@@ -12,6 +13,12 @@ export const Popup = () => {
     setSnackbarMessage("Copied to clipboard");
     setOpenSnackbar(true);
   };
+  const handleCloseModal = () => {
+    // Function to close the modal
+    // Implement your closing logic here
+    onClose();
+  };
+
   const contract = [
     {
       name: "Polygon",
@@ -59,7 +66,7 @@ export const Popup = () => {
           top: "50%",
           left: "50%",
           height: {
-            xs: "70vh",
+            xs: "80vh",
             sm: "55vh",
             md: "80vh",
             lg: "85vh",
@@ -97,6 +104,17 @@ export const Popup = () => {
             gap: 4,
           }}
         >
+          <IconButton
+            onClick={handleCloseModal}
+            sx={{
+              position: "absolute",
+              top: 4,
+              right: 4,
+              color: "#fff",
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
           <Box
             sx={{
               display: "flex",
@@ -121,12 +139,14 @@ export const Popup = () => {
               >
                 Add to Metamask
               </Typography>
+
               <img
                 src="./images/metamask.png"
                 alt="Metamaskicon"
                 style={{ height: 20 }}
               />
             </Box>
+
             <Typography
               variant="subtitle1"
               sx={{
@@ -161,36 +181,37 @@ export const Popup = () => {
                 <Typography
                   sx={{
                     width: "100%",
-                    paddingBottom: "8px",
+                    paddingBottom: "4px",
                     fontSize: "1rem",
                   }}
                 >
                   {contractItem.name}
                 </Typography>
-                <Typography sx={{ fontWeight: "semibold" }}>
-                  Floyx Contract Address
-                </Typography>
+
                 <Box
                   sx={{
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    paddingBottom: "2px",
+                    paddingBottom: "1px",
                   }}
                 >
-                  <Typography sx={{ color: "#545263" }}>
-                    {contractItem.address}
+                  <Typography sx={{ fontWeight: "semibold" }}>
+                    Floyx Contract Address
                   </Typography>
                   <IconButton
                     onClick={() => handleCopyAddress(contractItem.address)}
                     sx={{
                       color: "#35599f",
-                      padding: 0,
+                      paddingRight: "8px",
                     }}
                   >
                     <ContentCopyIcon />
                   </IconButton>
                 </Box>
+                <Typography sx={{ color: "#545263" }}>
+                  {contractItem.address}
+                </Typography>
 
                 {contractItem.value == 6 ? (
                   ""
