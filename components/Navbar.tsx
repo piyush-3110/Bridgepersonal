@@ -8,16 +8,27 @@ import {
   List,
   ListItem,
   ListItemText,
+  Modal,
 } from "@mui/material";
 import React, { useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import ConnectButton from "./ConnectWalletButton";
-
+import {Popup} from "./Popup";
 export const Navbar = () => {
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
   const [isHovering, setIsHovering] = useState<boolean>(false);
-
+  const style = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setMenuAnchor(event.currentTarget);
   };
@@ -27,7 +38,9 @@ export const Navbar = () => {
   };
 
   const open = Boolean(menuAnchor);
-
+  const [opens, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   return (
     <Box
       sx={{
@@ -69,11 +82,20 @@ export const Navbar = () => {
         <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
           <Button
             variant="text"
+            onClick={handleOpen}
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
           >
             Add To Metamask
           </Button>
+          <Modal
+        open={opens}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+   <Popup/>
+      </Modal>
           <img
             src="./images/metamask.png"
             alt="Metamaskicon"

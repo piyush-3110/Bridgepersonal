@@ -117,7 +117,13 @@ export const SecondSection = () => {
           >
             Max
           </Button>
-          <Typography variant="subtitle2">FLOYX</Typography>
+          <a href="/">
+            <img
+              src="./images/Logo.png"
+              alt="FLOYX"
+              style={{ height: "auto", width: 60 }}
+            ></img>
+          </a>
         </Box>
       </Box>
       {!walletAdd && maxBtnClicked && (
