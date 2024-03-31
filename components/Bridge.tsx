@@ -1,4 +1,5 @@
-"use Client";
+"use client";
+import React from "react";
 import { Box } from "@mui/system";
 import { FirstSection } from "./FirstSection";
 import { SecondSection } from "./SecondSection";
@@ -19,14 +20,14 @@ export const Bridge = () => {
         sx={{
           minHeight: {
             xs: "70vh",
-            sm: "60vh",
+            sm: "55vh",
             md: "80vh",
             lg: "80vh",
           },
-          borderRadius: "15px",
+          borderRadius: { xs: 0, sm: "15px" },
           bgcolor: "#0b081f",
           width: {
-            xs: "90vw",
+            xs: "100%",
             sm: "70vw",
             md: "50vw",
             lg: "40vw",
@@ -36,7 +37,7 @@ export const Bridge = () => {
           alignItems: "center",
           justifyContent: "center",
           gap: 5,
-          paddingY: "8px",
+          paddingY: "16px",
         }}
       >
         <FirstSection />

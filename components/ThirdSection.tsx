@@ -2,6 +2,7 @@
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
 import { setBal } from "@/lib/features/balSlice";
 import { setDestAddress } from "@/lib/features/destAddressSlice";
+import { setValue } from "@/lib/features/inputSlice";
 import { useWebThreeFuncs } from "@/utils/contractFunctions";
 import { Box, TextField, Typography, Button, Snackbar } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -15,11 +16,12 @@ export const ThirdSection = () => {
 
   const dispatch = useAppDispatch();
   const { address: walletAdd } = useAccount();
+  const { bridge, balance } = useWebThreeFuncs();
   const [transferBtnClicked, setTransferBtnClicked] = useState(false);
   const [destAdd, setDestAdd] = useState("");
   const [destAddError, setDestAddError] = useState(false);
-  const { bridge, balance } = useWebThreeFuncs();
   const [transactionProccessing, setTransactionProccessing] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   async function handleTransfer() {
     setTransactionProccessing(true);
@@ -30,6 +32,8 @@ export const ThirdSection = () => {
         if (data.status === "success") {
           const newBal = await balance();
           dispatch(setBal(formatEther(newBal)));
+          dispatch(setValue(""));
+          setOpenSnackbar(true);
         }
         setTransferBtnClicked(false);
         setTransactionProccessing(false);
@@ -153,6 +157,14 @@ export const ThirdSection = () => {
           You must transfer more than 0 tokens
         </Typography>
       ) : null}
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={2000} // Adjust the duration as needed
+        onClose={() => setOpenSnackbar(false)}
+        message={"Tokens Transferred Successfully"}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        sx={{ position: "fixed", bgcolor: "green" }}
+      />
     </Box>
   );
 };

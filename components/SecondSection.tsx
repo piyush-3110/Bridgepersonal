@@ -9,21 +9,23 @@ import { setBal } from "@/lib/features/balSlice";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
 export const SecondSection = () => {
   const fromChain = useAppSelector((state) => state.chain.fromChain);
+  const balVar = useAppSelector((state) => state.bal.value);
+  const val = useAppSelector((state) => state.input.value);
   const dispatch = useAppDispatch();
-  const [balVar, setBalVar] = useState<string>("0");
+
   const [maxBtnClicked, setMaxBtnClicked] = useState<boolean>(false);
   const { balance, getEstimatedFee } = useWebThreeFuncs();
   const { address: walletAdd } = useAccount();
 
-  const [val, setVal] = useState("");
+  // const [val, setVal] = useState("");
 
   useEffect(() => {
     if (walletAdd) {
       (async () => {
         const _bal = await balance();
-        setBalVar(formatEther(_bal));
         dispatch(setBal(formatEther(_bal)));
-        setVal("");
+        dispatch(setValue(""));
+        // setVal("");
       })();
     }
   }, [fromChain.name, walletAdd]);
@@ -37,7 +39,6 @@ export const SecondSection = () => {
     const newValue = event.target.value;
     const regex = /^\d*\.?\d*$/;
     if (regex.test(newValue)) {
-      setVal(newValue);
       dispatch(setValue(newValue));
       if (walletAdd) {
         const fee = setTimeout(() => {
@@ -53,9 +54,8 @@ export const SecondSection = () => {
     if (!walletAdd) {
       setMaxBtnClicked(true);
     } else {
-      setVal(balVar);
-      dispatch(setValue(balVar));
-      estfee(balVar);
+      dispatch(setValue(balVar.toString()));
+      estfee(balVar.toString());
       setMaxBtnClicked(false);
     }
   }
@@ -103,7 +103,13 @@ export const SecondSection = () => {
           />
           <Typography variant="subtitle2">{balVar} Floyx</Typography>
         </Box>
-        <Box sx={{ display: "flex", gap: 4, alignItems: "center" }}>
+        <Box
+          sx={{
+            display: "flex",
+            gap: { xs: "8px", sm: 4 },
+            alignItems: "center",
+          }}
+        >
           <Button
             variant="outlined"
             onClick={handleMaxBtn}
@@ -118,7 +124,13 @@ export const SecondSection = () => {
           >
             Max
           </Button>
-          <Typography variant="subtitle2">FLOYX</Typography>
+          <a href="/">
+            <img
+              src="./images/Logo.png"
+              alt="FLOYX"
+              style={{ height: "auto", width: 60 }}
+            ></img>
+          </a>
         </Box>
       </Box>
       {!walletAdd && maxBtnClicked && (
