@@ -1,53 +1,74 @@
 "use client";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
 import { setBal } from "@/lib/features/balSlice";
+import { setDestAddress } from "@/lib/features/destAddressSlice";
 import { useWebThreeFuncs } from "@/utils/contractFunctions";
-import { Box, TextField, Typography, Button } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
+import { Box, TextField, Typography, Button, Snackbar } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { TransactionExecutionError, formatEther } from "viem";
+import { TransactionExecutionError, formatEther, parseEther } from "viem";
 import { useAccount } from "wagmi";
 
 export const ThirdSection = () => {
-  const estGasFee = useSelector((state) => state.estGasFee.value);
-  const bal = useSelector((state) => state.bal.value);
-  const tokens = useSelector((state) => state.input.value);
-  const dispatch = useDispatch();
+  const estGasFee = useAppSelector((state) => state.estGasFee.value);
+  const bal = useAppSelector((state) => state.bal.value);
+  const tokens = useAppSelector((state) => state.input.value);
+
+  const dispatch = useAppDispatch();
   const { address: walletAdd } = useAccount();
-
   const [transferBtnClicked, setTransferBtnClicked] = useState(false);
-
+  const [destAdd, setDestAdd] = useState("");
+  const [destAddError, setDestAddError] = useState(false);
   const { bridge, balance } = useWebThreeFuncs();
+  const [transactionProccessing, setTransactionProccessing] = useState(false);
+
   async function handleTransfer() {
+    setTransactionProccessing(true);
     setTransferBtnClicked(true);
     if (walletAdd && bal > 0 && tokens > 0) {
       try {
-        const data = await bridge(tokens);
-        console.log(data);
+        const data = await bridge(parseEther(tokens.toString()));
         if (data.status === "success") {
           const newBal = await balance();
-          console.log(formatEther(newBal.toString()));
-          dispatch(setBal(formatEther(newBal.toString())));
+          dispatch(setBal(formatEther(newBal)));
         }
         setTransferBtnClicked(false);
+        setTransactionProccessing(false);
+        setDestAddError(false);
         return;
-      } catch (error) {
+      } catch (error: any) {
         if (
           error.name === "notSufficientGas" ||
           error.name === "notEnoughFloyxTokens"
         ) {
           // Handle the not enough tokens for the gas and value for the transaction to process error
           console.log(error.errorMessage);
-        } else if (error instanceof TransactionExecutionError) {
+        }
+        if (error instanceof TransactionExecutionError) {
           console.log("you rejected the transaction");
         }
-        // console.log(error);
+        if (
+          error.shortMessage.includes(
+            "Invalid parameters were provided to the RPC method."
+          )
+        ) {
+          setDestAddError(true);
+        }
         setTransferBtnClicked(false);
       }
     }
+    setTransactionProccessing(false);
   }
+
+  useEffect(() => {
+    if (destAdd !== "") {
+      dispatch(setDestAddress(destAdd));
+    }
+  }, [destAdd]);
+
   useEffect(() => {
     setTransferBtnClicked(false);
+    dispatch(setDestAddress(null));
+    setDestAdd("");
   }, [walletAdd]);
   return (
     <Box
@@ -66,6 +87,10 @@ export const ThirdSection = () => {
           Destination Address (Optional)
         </Typography>
         <TextField
+          value={destAdd}
+          onChange={(e) => {
+            setDestAdd(e.target.value);
+          }}
           variant="outlined"
           placeholder="0x346...."
           sx={{
@@ -77,6 +102,11 @@ export const ThirdSection = () => {
             width: "100%",
           }}
         ></TextField>
+        {destAddError && (
+          <Typography variant="subtitle2" sx={{ color: "red", mt: "12px" }}>
+            Please provide a valid address
+          </Typography>
+        )}
       </Box>
       <Box
         sx={{
@@ -102,11 +132,13 @@ export const ThirdSection = () => {
           padding: [1.5],
         }}
         disabled={
-          (!walletAdd && transferBtnClicked) || (bal <= 0 && transferBtnClicked)
+          (!walletAdd && transferBtnClicked) ||
+          (bal <= 0 && transferBtnClicked) ||
+          transactionProccessing
         }
         onClick={handleTransfer}
       >
-        Transfer Tokens
+        {transactionProccessing ? "Proccessing" : "Transfer Tokens"}
       </Button>
       {!walletAdd && transferBtnClicked ? (
         <Typography variant="subtitle2" sx={{ color: "red" }}>

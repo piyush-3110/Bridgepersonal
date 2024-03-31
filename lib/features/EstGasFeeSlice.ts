@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../store";
 
 export const estGasFeeSlice = createSlice({
   name: "estGasFee",
   initialState: {
-    value: "0",
+    value: 0,
   },
   reducers: {
     setEstGasFee: (state, action) => {
@@ -14,6 +15,6 @@ export const estGasFeeSlice = createSlice({
 
 export const { setEstGasFee } = estGasFeeSlice.actions;
 
-// export const selectBalValue = (state) => state.bal.value;
+export const selectBalValue = (state: RootState) => state.bal.value;
 
 export default estGasFeeSlice.reducer;

@@ -40,7 +40,6 @@ export const Navbar = () => {
       }}
     >
       <Box>
-       
         <a href="#">
           <img
             src="./images/Logo.png"
@@ -53,7 +52,6 @@ export const Navbar = () => {
         sx={{
           display: { xs: "none", sm: "none", md: "none", lg: "flex" },
           alignItems: "center",
-         
         }}
       >
         <Typography

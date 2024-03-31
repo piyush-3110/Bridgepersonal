@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../store";
 
 export const inputSlice = createSlice({
   name: "input",
   initialState: {
-    value: "0",
+    value: 0,
   },
   reducers: {
     setValue: (state, action) => {
@@ -14,6 +15,6 @@ export const inputSlice = createSlice({
 
 export const { setValue } = inputSlice.actions;
 
-export const selectInputValue = (state) => state.input.value;
+export const selectInputValue = (state: RootState) => state.input.value;
 
 export default inputSlice.reducer;

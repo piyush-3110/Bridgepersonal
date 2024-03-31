@@ -5,8 +5,6 @@ import styles from "./page.module.css";
 import { Bridge } from "../components/Bridge";
 import { Box } from "@mui/system";
 import { Navbar } from "@/components/Navbar";
-import { Provider } from "react-redux";
-import { store } from "../lib/store";
 export default function Home() {
   return (
     <Box

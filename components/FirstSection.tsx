@@ -7,16 +7,24 @@ import FormControl from "@mui/material/FormControl";
 import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
 import Select from "@mui/material/Select";
 import { IconButton } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
 import { setFromChain, setToChain } from "@/lib/features/chainSlice";
 import { setValue } from "@/lib/features/inputSlice";
+import { setEstGasFee } from "@/lib/features/EstGasFeeSlice";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
 
 export const FirstSection = () => {
-  const fromChain = useSelector((state) => state.chain.fromChain);
-  const toChain = useSelector((state) => state.chain.toChain);
-  const dispatch = useDispatch();
+  const fromChain = useAppSelector((state) => state.chain.fromChain);
+  const toChain = useAppSelector((state) => state.chain.toChain);
+  const dispatch = useAppDispatch();
 
-  const coins = [
+  interface Chain {
+    value: string;
+    label: string;
+    chainId: number;
+    logo: string;
+  }
+
+  const coins: Chain[] = [
     {
       value: "Polygon",
       label: "Polygon",
@@ -59,13 +67,14 @@ export const FirstSection = () => {
     const tempChain = { ...fromChain };
     dispatch(setFromChain({ ...toChain }));
     dispatch(setToChain({ ...tempChain }));
+    dispatch(setEstGasFee("0"));
   }
 
-  function handleChange(event, id) {
+  function handleChange(event: any, id: string) {
     const selectedChain = event.target.value;
     const selectedChainObject = coins.find(
       (coin) => coin.value === selectedChain
-    );
+    ) as Chain;
 
     if (id === "from-select") {
       dispatch(
@@ -76,7 +85,9 @@ export const FirstSection = () => {
       );
 
       if (selectedChain !== "Polygon") {
-        const polygonChain = coins.find((coin) => coin.value === "Polygon");
+        const polygonChain = coins.find(
+          (coin) => coin.value === "Polygon"
+        ) as Chain;
         dispatch(
           setToChain({
             name: polygonChain.value,
@@ -93,7 +104,9 @@ export const FirstSection = () => {
       );
 
       if (selectedChain !== "Polygon") {
-        const polygonChain = coins.find((coin) => coin.value === "Polygon");
+        const polygonChain = coins.find(
+          (coin) => coin.value === "Polygon"
+        ) as Chain;
         dispatch(
           setFromChain({
             name: polygonChain.value,
@@ -103,6 +116,7 @@ export const FirstSection = () => {
       }
     }
     dispatch(setValue("0"));
+    dispatch(setEstGasFee("0"));
   }
 
   return (

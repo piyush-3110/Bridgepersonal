@@ -21,6 +21,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/FirstSection.jsx", "utils/contractFunctions.jsx", "components/SecondSection.jsx", "components/ThirdSection.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/FirstSection.tsx", "utils/contractFunctions.tsx", "components/SecondSection.tsx", "components/ThirdSection.tsx"],
   "exclude": ["node_modules"]
 }

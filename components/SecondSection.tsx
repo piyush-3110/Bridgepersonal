@@ -1,17 +1,17 @@
 import { useWebThreeFuncs } from "@/utils/contractFunctions";
 import { Box, Button, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { formatEther } from "viem";
+import { formatEther, parseEther } from "viem";
 import { useAccount } from "wagmi";
 import { setValue } from "@/lib/features/inputSlice";
 import { setEstGasFee } from "@/lib/features/EstGasFeeSlice";
 import { setBal } from "@/lib/features/balSlice";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
 export const SecondSection = () => {
-  const fromChain = useSelector((state) => state.chain.fromChain);
-  const dispatch = useDispatch();
-  const [balVar, setBalVar] = useState("0");
-  const [maxBtnClicked, setMaxBtnClicked] = useState(false);
+  const fromChain = useAppSelector((state) => state.chain.fromChain);
+  const dispatch = useAppDispatch();
+  const [balVar, setBalVar] = useState<string>("0");
+  const [maxBtnClicked, setMaxBtnClicked] = useState<boolean>(false);
   const { balance, getEstimatedFee } = useWebThreeFuncs();
   const { address: walletAdd } = useAccount();
 
@@ -21,20 +21,19 @@ export const SecondSection = () => {
     if (walletAdd) {
       (async () => {
         const _bal = await balance();
-        const balStr = _bal.toString();
-        setBalVar(formatEther(balStr));
-        dispatch(setBal(formatEther(balStr)));
+        setBalVar(formatEther(_bal));
+        dispatch(setBal(formatEther(_bal)));
         setVal("");
       })();
     }
   }, [fromChain.name, walletAdd]);
 
-  async function estfee(inputVal) {
-    const data = await getEstimatedFee(inputVal);
-    dispatch(setEstGasFee(formatEther(data[0].toString())));
+  async function estfee(inputVal: string) {
+    const data = (await getEstimatedFee(parseEther(inputVal))) as [bigint, any];
+    dispatch(setEstGasFee(formatEther(data[0])));
   }
 
-  const handleChange = (event) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
     const regex = /^\d*\.?\d*$/;
     if (regex.test(newValue)) {
@@ -55,6 +54,8 @@ export const SecondSection = () => {
       setMaxBtnClicked(true);
     } else {
       setVal(balVar);
+      dispatch(setValue(balVar));
+      estfee(balVar);
       setMaxBtnClicked(false);
     }
   }

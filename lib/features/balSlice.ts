@@ -1,6 +1,7 @@
 // balSlice.js
 
 import { createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../store";
 
 export const balSlice = createSlice({
   name: "bal",
@@ -16,6 +17,6 @@ export const balSlice = createSlice({
 
 export const { setBal } = balSlice.actions;
 
-export const selectBalValue = (state) => state.bal.value;
+export const selectBalValue = (state: RootState) => state.bal.value;
 
 export default balSlice.reducer;
